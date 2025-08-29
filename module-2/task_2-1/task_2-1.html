@@ -2,12 +2,47 @@
 <html lang="en" style="display: table; margin: auto;">
 <head>
   <meta charset="UTF-8">
-  <title>Submission 2.1</title>
+  <title>Submission 2.1</title> 
 </head>
 <body>
 <script>
   /* write your code below this line  🙂 */
-
+"use strict";
+  x = 2;
+y = 17;
+z = x + y;
+document.write("The value of z is: " + z);
 </script>
 </body>
 </html>
+ <!-- 
+Part 1: Scripts can be placed in the <body>, or in the <head> section of an HTML page, or in both.
+Part 2: you have let, const, and var to declare variables in JavaScript.
+Part 3: let mittnavn = "Vilhelm Langemyr";
+          let alder = 23;
+          const fødselsår = 2001;  
+Part 4: if you use let the error goes away.            
+Part 5: if you change the numbers (x and y) the result (z) will also change. by using document.write you can write the result directly to the html page.      
+
+Discussion questions:
+1. No. if you create a variable without let, const, or var it will become a global variable.
+2. you can do it in three ways that i have learned:
+
+way 1:
+<script>
+  let x = 5;
+  let y = 17;
+  let z = x + y;
+
+way 2: 
+let x, y = 2, z = y;
+
+way 3:
+let x; let y = 2; let z = y;
+
+3. variables declared with const cannot be reassigned. if you try to reassign a const variable you will get an error.
+4. Uncaught ReferenceError: x is not defined
+5. implicit declaration declares a variable without let, const, or var. explicit declaration declares a variable with let, const, or var.
+and explicit declaration declares the variable with let, const, or var. 
+-->
+       
