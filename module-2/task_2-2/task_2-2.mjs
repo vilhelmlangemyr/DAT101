@@ -114,7 +114,7 @@ let totalDays2 = 131;
 
 let weeks2 = Math.floor(totalDays2 / 7);
 
-let days2 = totaldays2 % 7;
+let days2 = totalDays2 % 7;
 
-printOut(totalDays2 + " days is " + weeks + " weeks and " + days + " days.");    
+printOut(totalDays2 + " days is " + weeks2 + " weeks and " + days2 + " days.");    
 printOut(newLine);
