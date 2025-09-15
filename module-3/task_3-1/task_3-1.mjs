@@ -3,7 +3,7 @@ import { printOut, newLine } from "../../common/script/utils.mjs";
 
 printOut("--- Part 1, 2, 3 ----------------------------------------------------------------------------------------");
 /* Put your code below here!*/
-printOut("Task 1, 2 and 3");
+printOut("wake up time is 8");
 let wakeUpTime = 8;
 if (wakeUpTime === 7) {
   printOut("I can take the bus to school.");
@@ -17,7 +17,8 @@ printOut(newLine);
 printOut("--- Part 4, 5 --------------------------------------------------------------------------------------------");
 /* Put your code below here!*/
 let resualt = 0;
-if (resualt > 0) {
+printOut("oppgave 4 value is -1");
+if (resualt > -1) {
   printOut("The number is positive.");
 }else if (resualt < 0) {
   printOut("The number is negative.");
@@ -31,7 +32,7 @@ printOut("--- Part 6 -----------------------------------------------------------
 /* Put your code below here!*/
 let imagesize = Math.floor(Math.random() * 8) + 1;
 let minsize = 4;
-
+printOut("imgae size is " + imagesize);
 if (imagesize >= minsize) {
   printOut("thank you");
 }else {
@@ -44,7 +45,7 @@ printOut("--- Part 7 -----------------------------------------------------------
 let imagesize2 = Math.floor(Math.random() * 8) + 1;
 let minsize2 = 4;
 let maxsize2 = 6;
-
+printOut("imgae size is " + imagesize2);
 if (imagesize2 < minsize2) {
   printOut("thank you");
 }else if (imagesize2 >= maxsize2) {
@@ -62,6 +63,8 @@ const monthList =["January", "February", "Mars", "April", "Mai",
 "Jun", "Juli", "August", "September", "October", "November", "December"];
 const noOfMonth = monthList.length;
 const monthName = monthList[Math.floor(Math.random() * noOfMonth)];
+
+printOut("the month is " + monthName);
 
 if (monthName.includes("r")) {
   printOut("you need to take vitamin D");
