@@ -1,6 +1,7 @@
 "use strict";
 import { TSprite } from "libSprite";
-import { hero, EGameStatus } from "./FlappyBird.mjs";
+import { hero, EGameStatus, menu } from "./FlappyBird.mjs";
+import { isDayMode } from "./FlappyBird.mjs";
 
 const EasyFlyerGap = 150;
 const HardFlyerGap = 100;
@@ -18,7 +19,7 @@ export class TObstacle{
     const gap = Math.ceil(Math.random() * (EasyFlyerGap - HardFlyerGap) + HardFlyerGap);
     const minTop = -this.#spi.height + MinimumProtrusion; // Minimum top position for upper obstacle
     const maxTop = -MinimumProtrusion; // Maximum top position for upper obstacle
-    // Genrate random top position for upper obstacle
+    // Generate random top position for upper obstacle
     let top = Math.ceil(Math.random() * (maxTop - minTop) + minTop);
     const minBottom = 400 - MinimumProtrusion; // Minimum bottom position for lower obstacle
     let topWithGap = this.#spi.height + top + gap; // Initial position of bottom obstacle based on the height of the sprite, gap, and top 
@@ -33,33 +34,53 @@ export class TObstacle{
     this.#spDown.index = 2;
     this.#spUp = new TSprite(aSpcvs, aSPI, x, top);
     this.#spUp.index = 3;
+
+    if (isDayMode) {
+      this.#spDown.index = 2;
+      this.#spUp.index = 3;
+    } else {
+      this.#spDown.index = 0;
+      this.#spUp.index = 1;
+    }
   }
 
-// properties
-get x(){
+  // Properties
+  get x(){
     return this.#spDown.x;
-}
+  }
 
-draw(){
+  get width(){
+    return this.#spDown.width;
+  }
+
+  draw(){
     this.#spDown.draw();
     this.#spUp.draw();
-}
+  }
 
-animate(){ 
-        this.#spUp.x --;
-        this.#spDown.x --;
-        let hasCollided = hero.hasCollided(this.#spDown) || hero.hasCollided(this.#spUp);
+  setDayNight(aIsDay) {
+  if (aIsDay) {
+      this.#spDown.index = 2;
+      this.#spUp.index = 3;
+    } else {
+      this.#spDown.index = 0;
+      this.#spUp.index = 1;
+    }
+  }
+  
+  animate(){
+    this.#spDown.x--;
+    this.#spUp.x--;
+    let hasCollided = hero.hasCollided(this.#spDown) || hero.hasCollided(this.#spUp);
 
-        if(hasCollided){
-            console.log("Collision with hero");
-            EGameStatus.state = EGameStatus.heroIsDead;
-            hero.animationSpeed = 0;
-            hero.flap(); // Last flap of death
-        }
+    if(hasCollided){
+      console.log("Collision with Hero!");
+      EGameStatus.state = EGameStatus.heroIsDead;
+      hero.animationSpeed = 0;
+      menu.stopSound();
+      hero.flap(); // Last flap of death!
+      hero.dead();
+    }
+  }
 
-
-}
-    
-    
-
-} // end of TObstacle
+}// End of class TObstacle

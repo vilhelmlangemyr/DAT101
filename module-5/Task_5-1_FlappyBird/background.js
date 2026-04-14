@@ -1,30 +1,37 @@
-"Use Strict";
-import {TSprite} from "libSprite";
+"use strict";
+import { TSprite } from "libSprite";
 
 export class TBackground{
-    #SpriteBackground;
-    #SpriteGround;
+  #spriteBackground;
+  #spriteGround;
 
-    constructor(aSpcvs, aSPI){
-        this.#SpriteBackground = new TSprite(aSpcvs, aSPI.background,0,0);
-        const groundPosY = aSPI.background.height - aSPI.ground.height;
-        this.#SpriteGround = new TSprite(aSpcvs, aSPI.ground,0,groundPosY);
-    }
+  constructor(aSpcvs, aSPI){
+    this.#spriteBackground = new TSprite(aSpcvs,aSPI.background,0,0);
+    const groundPosY = aSPI.background.height - aSPI.ground.height;
+    this.#spriteGround = new TSprite(aSpcvs, aSPI.ground, 0, groundPosY);
+  }
 
-    drawBackground(){
-        this.#SpriteBackground.draw();
-        
-    }
-    drawGrond(){
-        this.#SpriteGround.draw();
-    }
-
-    animate (){
-        let x = this.#SpriteGround.x + (this.#SpriteGround.width / 2);
-        if (x < 5){
-        this.#SpriteGround.x = 0;
-        } else {
-        this.#SpriteGround.x --;
-        }
-    }
+  setDayNight(aIsDay) {
+  // Du må sette indeksen på selve bakgrunns-spriten
+  this.#spriteBackground.index = aIsDay ? 0 : 1;
 }
+
+  drawBackground(){
+    this.#spriteBackground.draw();
+  }
+
+  drawGround(){
+    this.#spriteGround.draw();
+  }
+
+  animate(){
+    const x = this.#spriteGround.x + (this.#spriteGround.width / 2);
+    if(x < 5){
+      this.#spriteGround.x = 0;  
+    }else{
+      this.#spriteGround.x--;
+    }
+  }
+}
+
+
