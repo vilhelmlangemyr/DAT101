@@ -6,13 +6,13 @@ import { THero } from "./hero.js";
 import { TObstacle } from "./obstacle.js";
 import { TBait } from "./bait.js";
 import { TMenu } from "./menu.js";
-export let isDayMode = true;
 
 //--------------- Objects and Variables ----------------------------------//
 const chkMuteSound = document.getElementById("chkMuteSound");
 const rbDayNight = document.getElementsByName("rbDayNight");
 const cvs = document.getElementById("cvs");
 const spcvs = new TSpriteCanvas(cvs);
+
 
 // prettier-ignore
 const SpriteInfoList = {
@@ -39,18 +39,14 @@ const obstacles = [];
 const baits = [];
 export const menu = new TMenu(spcvs, SpriteInfoList);
 let obstaclePassed = false;
+export let soundMuted = false;
+let currentIsDay = true;
 
 //--------------- Functions ----------------------------------------------//
 export function startGame() {
   EGameStatus.state = EGameStatus.gaming;
   setTimeout(spawnObstacle, 1000);
   setTimeout(spawnBait, 1000);
-}
-
-export function GameOver() {
-  EGameStatus.state = EGameStatus.gameOver;
-  menu.gameOver();
-  menu.gameOverMenu();
 }
 
 function spawnBait() {
@@ -65,7 +61,12 @@ function spawnBait() {
 function spawnObstacle() {
   if (EGameStatus.state === EGameStatus.gaming) {
     const obstacle = new TObstacle(spcvs, SpriteInfoList.obstacle);
+
+    
+    obstacle.setDayNight(currentIsDay);
+
     obstacles.push(obstacle);
+
     const nextTime = Math.ceil(Math.random() * 3) + 1;
     setTimeout(spawnObstacle, nextTime * 1000);
   }
@@ -109,6 +110,17 @@ function animateGame() {
   }
 }
 
+export function gameOver() {
+  EGameStatus.state = EGameStatus.gameOver;
+  menu.gameOver();
+}
+
+export function gameOverMenu () {
+EGameStatus.state = EGameStatus.gameOver;
+  menu.gameOverMenu();
+
+}
+
 function drawGame() {
   background.drawBackground();
   for (let i = 0; i < baits.length; i++) {
@@ -118,7 +130,7 @@ function drawGame() {
 
   for (let i = 0; i < obstacles.length; i++) {
     const obstacle = obstacles[i];
-    obstacle.draw(  );
+    obstacle.draw();
   }
   hero.draw();
   background.drawGround();
@@ -150,28 +162,34 @@ function onKeyDown(aEvent) {
 } // end of onKeyDown
 
 function setSoundOnOff() {
-  const isMuted = chkMuteSound.checked;
-  if (menu) {
-    menu.setSoundMute(isMuted);
-  }
-} // end of setSoundOnOff
+ 
+  soundMuted = chkMuteSound.checked;
 
-rbDayNight.forEach((radio) => {
-  radio.addEventListener("change", setDayNight);
-});
-
-function setDayNight(aEvent) {
-  const isDay = (aEvent.target.value === "1");
   
-  // VIKTIG: Lagre statusen her!
-  isDayMode = isDay; 
+  menu.setSoundMute(soundMuted);
+}
+  
+function setDayNight(aEvent) {
+  const isDayIndex = aEvent.target.value;
+
+  let isDay = null;
+  if (isDayIndex == 1) {
+    isDay = true;
+  } else {
+    isDay = false;
+  }
+
+  
+  currentIsDay = isDay;
 
   background.setDayNight(isDay);
 
   for (let i = 0; i < obstacles.length; i++) {
     obstacles[i].setDayNight(isDay);
   }
-} // end of setDayNight
+
+  console.log(`Day/Night mode changed: ${aEvent.target.value}`);
+}
 
 //--------------- Main Code ----------------------------------------------//
 chkMuteSound.addEventListener("change", setSoundOnOff);
