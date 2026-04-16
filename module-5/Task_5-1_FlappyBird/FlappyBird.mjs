@@ -47,6 +47,12 @@ export function startGame() {
   setTimeout(spawnBait, 1000);
 }
 
+export function GameOver() {
+  EGameStatus.state = EGameStatus.gameOver;
+  menu.gameOver();
+  menu.gameOverMenu();
+}
+
 function spawnBait() {
   if (EGameStatus.state === EGameStatus.gaming) {
     const bait = new TBait(spcvs, SpriteInfoList.food);
@@ -148,7 +154,6 @@ function setSoundOnOff() {
   if (menu) {
     menu.setSoundMute(isMuted);
   }
-  menu.stopSound(); // Denne vil stoppe lyden HVER gang du endrer checkboxen, selv om du skrur lyd PÅ.
 } // end of setSoundOnOff
 
 rbDayNight.forEach((radio) => {
@@ -158,10 +163,11 @@ rbDayNight.forEach((radio) => {
 function setDayNight(aEvent) {
   const isDay = (aEvent.target.value === "1");
   
-  // Oppdater bakgrunnen
+  // VIKTIG: Lagre statusen her!
+  isDayMode = isDay; 
+
   background.setDayNight(isDay);
 
-  // Oppdater alle rør som allerede er på skjermen
   for (let i = 0; i < obstacles.length; i++) {
     obstacles[i].setDayNight(isDay);
   }

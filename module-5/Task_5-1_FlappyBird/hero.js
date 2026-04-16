@@ -25,6 +25,7 @@ export class THero extends TSprite {
     this.#sfFood = null;
     this.#sfHeroIsDead = null;
     this.#sfGameOver = null;
+
   }
 
   eat() {
@@ -44,17 +45,17 @@ export class THero extends TSprite {
 
     if (hasGravity) {
       if (this.y < 400 - this.height) {
-        this.#speed += this.#gravity; // increase speed due to gravity
-        this.y += this.#speed; // update position based on speed
+        this.#speed += this.#gravity; 
+        this.y += this.#speed; 
         if (this.rotation < 90) {
-          // limit max rotation
-          this.rotation = this.#speed * 25; // tilt down based on speed
+          
+          this.rotation = this.#speed * 25; 
         }
       } else {
-  // Sjekk at vi ikke allerede har satt status til gameOver
+  
   if (EGameStatus.state !== EGameStatus.gameOver) {
     EGameStatus.state = EGameStatus.gameOver;
-    menu.stopSound(); // Stopper bakgrunnsmusikken én gang
+    menu.stopSound();
     this.animationSpeed = 0;
 
     if (this.#sfGameOver === null) {

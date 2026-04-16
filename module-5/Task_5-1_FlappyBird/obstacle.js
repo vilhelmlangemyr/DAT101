@@ -7,80 +7,74 @@ const EasyFlyerGap = 150;
 const HardFlyerGap = 100;
 const MinimumProtrusion = 30;
 
-
-export class TObstacle{
+export class TObstacle {
   #spUp;
   #spDown;
   #spi;
-  constructor(aSpcvs, aSPI){
+
+  constructor(aSpcvs, aSPI) {
     const x = 600;
     this.#spi = aSPI;
-    // Generate random gap height, based on difficulty settings
+
     const gap = Math.ceil(Math.random() * (EasyFlyerGap - HardFlyerGap) + HardFlyerGap);
-    const minTop = -this.#spi.height + MinimumProtrusion; // Minimum top position for upper obstacle
-    const maxTop = -MinimumProtrusion; // Maximum top position for upper obstacle
-    // Generate random top position for upper obstacle
+    const minTop = -this.#spi.height + MinimumProtrusion;
+    const maxTop = -MinimumProtrusion;
+
     let top = Math.ceil(Math.random() * (maxTop - minTop) + minTop);
-    const minBottom = 400 - MinimumProtrusion; // Minimum bottom position for lower obstacle
-    let topWithGap = this.#spi.height + top + gap; // Initial position of bottom obstacle based on the height of the sprite, gap, and top 
-    if(topWithGap > minBottom){
-      // The top with gap is too low, adjust top and keep the gap constant
+    const minBottom = 400 - MinimumProtrusion;
+    let topWithGap = this.#spi.height + top + gap;
+
+    if (topWithGap > minBottom) {
       const adjustment = topWithGap - minBottom;
       top -= adjustment;
-      topWithGap = this.#spi.height + top + gap; // Recalculate topWithGap after adjustment
+      topWithGap = this.#spi.height + top + gap;
     }
 
     this.#spDown = new TSprite(aSpcvs, aSPI, x, topWithGap);
-    this.#spDown.index = 2;
     this.#spUp = new TSprite(aSpcvs, aSPI, x, top);
-    this.#spUp.index = 3;
 
+    // Initial setting når røret lages:
+    // Dag (true) -> 2 og 3
+    // Natt (false) -> 0 og 1
     if (isDayMode) {
-      this.#spDown.index = 2;
-      this.#spUp.index = 3;
+      this.#spDown.index = 2; 
+      this.#spUp.index = 3;   
     } else {
-      this.#spDown.index = 0;
-      this.#spUp.index = 1;
+      this.#spDown.index = 0; 
+      this.#spUp.index = 1;   
     }
   }
 
-  // Properties
-  get x(){
-    return this.#spDown.x;
-  }
-
-  get width(){
-    return this.#spDown.width;
-  }
-
-  draw(){
+  draw() {
     this.#spDown.draw();
     this.#spUp.draw();
   }
 
+  // Denne metoden fikser fargen på rør som allerede er på skjermen når du trykker på knappen
   setDayNight(aIsDay) {
-  if (aIsDay) {
-      this.#spDown.index = 2;
-      this.#spUp.index = 3;
+    if (aIsDay) {
+      this.#spDown.index = 2; // Dagmodus -> Index 2 (Grønn ned?)
+      this.#spUp.index = 3;   // Dagmodus -> Index 3 (Grønn opp?)
     } else {
-      this.#spDown.index = 0;
-      this.#spUp.index = 1;
+      this.#spDown.index = 0; // Nattmodus -> Index 0 (Rød ned?)
+      this.#spUp.index = 1;   // Nattmodus -> Index 1 (Rød opp?)
     }
   }
-  
-  animate(){
+
+  animate() {
     this.#spDown.x--;
     this.#spUp.x--;
     let hasCollided = hero.hasCollided(this.#spDown) || hero.hasCollided(this.#spUp);
 
-    if(hasCollided){
-      console.log("Collision with Hero!");
+    if (hasCollided) {
       EGameStatus.state = EGameStatus.heroIsDead;
       hero.animationSpeed = 0;
       menu.stopSound();
-      hero.flap(); // Last flap of death!
+      hero.flap(); 
       hero.dead();
     }
   }
 
-}// End of class TObstacle
+  get x() { return this.#spDown.x; }
+  get width() { return this.#spDown.width; }
+}
