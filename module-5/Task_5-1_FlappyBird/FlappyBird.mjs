@@ -45,6 +45,7 @@ let currentIsDay = true;
 //--------------- Functions ----------------------------------------------//
 export function startGame() {
   EGameStatus.state = EGameStatus.gaming;
+  console.log("Game Started");
   setTimeout(spawnObstacle, 1000);
   setTimeout(spawnBait, 1000);
 }
@@ -57,6 +58,14 @@ function spawnBait() {
     setTimeout(spawnBait, nextTime * 1000);
   }
 }
+
+export function resetWorld() {
+  // Clearing the array length to 0 removes all existing objects
+  obstacles.length = 0;
+  baits.length = 0;
+  console.log("World reset: Obstacles and Baits cleared.");
+}
+
 
 function spawnObstacle() {
   if (EGameStatus.state === EGameStatus.gaming) {

@@ -71,13 +71,18 @@ export class THero extends TSprite {
   dead(){
     this.#sfHeroIsDead = new TSoundFile(fnHeroIsDead);
     this.#sfHeroIsDead.play();
-  
-   
   }
 
   flap() {
     this.#speed = -3.5;
     this.rotation = 0;
+  }
+
+  reset() {
+    this.y = 200;
+    this.#speed = 0;
+    this.rotation = 0;
+    this.animationSpeed = 20;
   }
 
   

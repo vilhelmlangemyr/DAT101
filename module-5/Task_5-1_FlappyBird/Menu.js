@@ -1,6 +1,6 @@
 "use strict";
 import { TSprite, TSpriteButton, TSpriteNumber} from "libSprite";
-import { startGame, EGameStatus } from "./FlappyBird.mjs";
+import { startGame, EGameStatus, hero, resetWorld } from "./FlappyBird.mjs";
 import { TSoundFile } from "libSound";
 
 const fnCountDown = "./Media/countDown.mp3";
@@ -18,16 +18,25 @@ export class TMenu{
   #spMedal;
   #spScore;
   #spBestScore;
+  #spHeroRestartBtn;
+ 
 
 
   constructor(aSpcvs, aSPI){
     this.#spTitle = new TSprite(aSpcvs, aSPI.flappyBird, 200, 100);
+
     this.#spPlayBtn = new TSpriteButton(aSpcvs, aSPI.buttonPlay, 240, 180);
     this.#spPlayBtn.addEventListener("click", this.spPlayBtnClick.bind(this));
+
+    this.#spHeroRestartBtn = new TSpriteButton(aSpcvs, aSPI.buttonPlay, 240, 250);
+    this.#spHeroRestartBtn.addEventListener("click", this.spHeroRestartBtnClick.bind(this));
+    this.#spHeroRestartBtn.visible = false;
+
     this.#spCountDown = new TSpriteNumber(aSpcvs, aSPI.numberBig, 280, 190);
     this.#spCountDown.visible = false;
     this.#sfCountDown = null;
     this.#sfRunning = null;
+
     this.#spGameScore = new TSpriteNumber(aSpcvs, aSPI.numberSmall, 10, 10);
     this.#spGameScore.alpha = 0.5;
 
@@ -40,10 +49,10 @@ export class TMenu{
     this.#spMedal = new TSprite(aSpcvs, aSPI.medal, 202, 163);
     this.#spMedal.visible = false;
 
-    this.#spScore = new TSpriteNumber(aSpcvs, aSPI.numberSmall, 240, 163);
+    this.#spScore = new TSpriteNumber(aSpcvs, aSPI.numberSmall, 355, 155);
     this.#spScore.visible = false;
 
-    this.#spBestScore = new TSpriteNumber(aSpcvs, aSPI.numberSmall, 240, 193);
+    this.#spBestScore = new TSpriteNumber(aSpcvs, aSPI.numberSmall, 355, 195);
     this.#spBestScore.visible = false;
 
     
@@ -67,6 +76,7 @@ export class TMenu{
     this.#spMedal.draw();
     this.#spScore.draw();
     this.#spBestScore.draw();
+    this.#spHeroRestartBtn.draw();
 
   }
 
@@ -91,10 +101,13 @@ export class TMenu{
     this.#spInfo.visible = true;
     this.#spInfo.index = 1;
     this.#spGameOverMenu.visible = true;
-    this.#spMedal.visible = true;
     this.#spScore.visible = true;
     this.#spScore.value = this.#spGameScore.value;
     this.#spBestScore.visible = true;
+    this.#spGameScore.visible = false;
+    this.#spHeroRestartBtn.visible = true;
+    this.#spMedal.visible = true;
+     
     const bestScore = localStorage.getItem("bestScore") || 0;
     if (this.#spGameScore.value > bestScore) {
       localStorage.setItem("bestScore", this.#spGameScore.value);
@@ -102,7 +115,43 @@ export class TMenu{
     } else {
       this.#spBestScore.value = bestScore;
     }
+    if(this.#spScore.value >= 10){ //gull
+      this.#spMedal.index = 2;
+    } else if(this.#spScore.value >= 5){ // sølv
+      this.#spMedal.index = 1;
+    } else if(this.#spScore.value >= 1){ // bronse
+      this.#spMedal.index = 3;
+    }else if (this.#spScore.value == 0){ // hvit
+      this.#spMedal.index = 0;
+    }
   }
+
+    spHeroRestartBtnClick(){
+    this.#spPlayBtn.hidden = true;
+    this.#spCountDown.visible = true;
+     this.#spTitle.hidden = true;
+     this.#spGameOverMenu.visible = false;
+     this.#spMedal.visible = false;
+     this.#spScore.visible = false;
+     this.#spBestScore.visible = false;
+     this.#spGameScore.visible = true;
+      this.#spGameScore.value = 0;
+     this.#spHeroRestartBtn.visible = false;
+
+      EGameStatus.state = EGameStatus.countDown;
+     
+     this.#spInfo.visible = true;
+     this.#spInfo.index = 0;
+    
+    this.#spCountDown.value = 3;
+    this.#sfCountDown = new TSoundFile(fnCountDown);
+    this.#sfCountDown.play();
+    setTimeout(this.countDown.bind(this), 1000);
+
+    hero.reset();
+    resetWorld();
+
+    }
 
  
 
@@ -113,19 +162,17 @@ export class TMenu{
      this.#spTitle.hidden = true;
      
      EGameStatus.state == EGameStatus.countDown;
-
      
      this.#spInfo.visible = true;
      this.#spInfo.index = 0;
-     
-     
-
     
     this.#spCountDown.value = 3;
     this.#sfCountDown = new TSoundFile(fnCountDown);
     this.#sfCountDown.play();
     setTimeout(this.countDown.bind(this), 1000);
   }
+
+
 
   setSoundMute(aIsMuted) {
     

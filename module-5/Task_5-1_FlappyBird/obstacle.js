@@ -2,9 +2,9 @@
 import { TSprite } from "libSprite";
 import { hero, EGameStatus, menu } from "./FlappyBird.mjs";
 
-const EasyFlyerGap = 150;
-const HardFlyerGap = 100;
-const MinimumProtrusion = 30;
+const EasyFlyerGap = 1500;
+const HardFlyerGap = 1000;
+const MinimumProtrusion = 300;
 
 
 export class TObstacle{
@@ -81,8 +81,9 @@ this.#spUp.index = 1;
 this.#spDown.index = 0;
 
  }
-
-  }
+}
+reset(){
+  length = 0;}
 
   
 
